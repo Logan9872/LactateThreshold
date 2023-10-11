@@ -81,7 +81,7 @@ x_max_dist = x_fit[index_max_dist]
 y_max_dist = y_fit[index_max_dist]
 
 
-# 绘制hr
+# 绘制HR
 y_hr = hp(x_max_dist)
 print(y_hr)
 
