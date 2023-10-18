@@ -56,7 +56,7 @@ ax2.plot(x_fit, h_fit, 'lightcoral', label='心率曲线')
 
 print(h_fit)
 # 找到第一个数据点和最后一个数据点的坐标 1
-first_point = (x[0], y[0])
+first_point = (x[1], y[1])
 last_point = (x[-1], y[-1])
 
 # 绘制直线连接第一个点和最后一个点
