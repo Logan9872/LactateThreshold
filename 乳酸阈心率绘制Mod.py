@@ -10,22 +10,15 @@ plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 data = {
     "intensity": [ 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6],
     # "lactate": [ 1.2, 1.6, 1.6, 2.4, 4.3, 2.6, 3.8, 6.0, 15.5]
-    "lactate": [ 1.11, 1.16, 1.42, 1.83, 2.22, 2.93, 4.76, 6.68]
-
-}
-
-hr_data = {
-"heart": [105, 106, 134, 150, 158, 168, 178, 184, 192],
-    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6]
+    "lactate": [ 1.11, 1.16, 1.42, 1.83, 2.22, 2.93, 4.76, 6.68],
+    "heart": [ 106, 134, 150, 158, 168, 178, 184, 192]
 }
 
 df = pd.DataFrame(data)
-HR_df = pd.DataFrame(hr_data )
 
 x = df.iloc[:, 0].values
 y = df.iloc[:, 1].values
-h = HR_df.iloc[:, 0].values
-hx = HR_df.iloc[:, 1].values
+h = df.iloc[:, 2].values
 
 # 绘制双坐标轴的一侧
 plt.figure(figsize=(10, 6))
@@ -43,18 +36,16 @@ p = np.poly1d(z)
 
 # 心率的三阶多项式拟合
 print(h)
-h1 = np.polyfit(hx, h, 3)
+h1 = np.polyfit(x, h, 3)
 hp = np.poly1d(h1)
 
 # 进行指数函数拟合
 
 # 绘制拟合曲线
 x_fit = np.linspace(min(x), max(x), 100)
-hx_fit = np.linspace(min(hx), max(hx), 100)
 y_fit = p(x_fit)
-hy_fit = p(hx_fit)
 ax1.plot(x_fit, y_fit, 'r', label='血乳酸拟合曲线')
-ax1.plot(hx_fit, hy_fit, 'r', label='心率拟合曲线', alpha=0.1)
+ax1.plot(x_fit, y_fit, 'r', label='心率拟合曲线', alpha=0.2)
 
 # 绘制心率拟合曲线
 h_fit = hp(x_fit)
@@ -102,7 +93,7 @@ ax1.annotate(f'乳酸阈值:{y_max_dist:.2f} mmol/L', xy=(x_max_dist, y_max_dist
              arrowprops=dict(arrowstyle='->', color='black'))
 
 # 乳酸阈心率标记
-ax2.annotate(f'Huawei手表  乳酸阈心率:171 bpm, 乳酸阈跑速:9.42km/h\n直测法测量  乳酸阈心率:{y_hr:.0f} bpm, 乳酸阈跑速:{x_max_dist:.2f}km/h', xy=(x_max_dist, y_hr), xytext=(x_max_dist - 3, y_hr+6),
+ax2.annotate(f'Huawei手表  乳酸阈心率:171.0 bpm, 乳酸阈跑速:9.42km/h\n直测法测量  乳酸阈心率:{y_hr:.1f} bpm, 乳酸阈跑速:{x_max_dist:.2f}km/h', xy=(x_max_dist, y_hr), xytext=(x_max_dist - 3, y_hr+6),
              arrowprops=dict(arrowstyle='->', color='black'))
 
 
