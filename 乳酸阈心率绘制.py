@@ -29,12 +29,15 @@ hx = HR_df.iloc[:, 1].values
 
 # 绘制双坐标轴的一侧
 plt.figure(figsize=(10, 6))
+plt.xlim((3, 14))
+plt.ylim((1, 7))
+
 ax1 = plt.gca()  # Get the current axis
 # 绘制散点图
 ax1.scatter(x, y, label='血乳酸样本')
 
-x_d = [2.8, 4]
-y_d = [1.15, 1.64]
+x_d = [4]
+y_d = [1.64]
 ax1.scatter(x_d, y_d, c="#1f77b4")
 
 # 进行三阶多项式拟合
@@ -49,18 +52,21 @@ hp = np.poly1d(h1)
 # 进行指数函数拟合
 
 # 绘制拟合曲线
+# ax1.plot("",c= 'lightcoral',  label='心率拟合曲线')
 x_fit = np.linspace(min(x), max(x), 100)
 hx_fit = np.linspace(min(hx), max(hx), 100)
 y_fit = p(x_fit)
 hy_fit = p(hx_fit)
 ax1.plot(x_fit, y_fit, 'r', label='血乳酸拟合曲线')
-ax1.plot(hx_fit, hy_fit, 'r', label='心率拟合曲线', alpha=0.1)
+ax1.plot(hx_fit, hy_fit, 'r', alpha=0)
+
+
 
 # 绘制心率拟合曲线
 h_fit = hp(x_fit)
 
 ax2 = ax1.twinx()
-ax2.plot(x_fit, h_fit, 'lightcoral', label='心率曲线')
+ax2.plot(hx_fit, h_fit, 'lightcoral', label='心率曲线')
 
 
 print(h_fit)
@@ -78,7 +84,7 @@ for i in range(len(x_fit)):
     # 计算点到直线的距离公式：|Ax + By + C| / sqrt(A^2 + B^2)
 
     # 这里我遍历的是拟合的曲线到第一个和最后一个点连线的距离 2
-    distance = np.abs((last_point[0] - first_point[0]) * (first_point[1] - y_fit[i]) - (first_point[0] - x_fit[i]) * (
+    distance = ((last_point[0] - first_point[0]) * (first_point[1] - y_fit[i]) - (first_point[0] - x_fit[i]) * (
                 last_point[1] - first_point[1])) / np.sqrt((last_point[0] - first_point[0]) ** 2 + (last_point[1] - first_point[1]) ** 2)
     distances.append(distance)
 
@@ -102,7 +108,7 @@ ax1.annotate(f'乳酸阈值:{y_max_dist:.2f} mmol/L', xy=(x_max_dist, y_max_dist
              arrowprops=dict(arrowstyle='->', color='black'))
 
 # 乳酸阈心率标记
-ax2.annotate(f'Huawei手表  乳酸阈心率:171 bpm, 乳酸阈跑速:9.42km/h\n直测法测量  乳酸阈心率:{y_hr:.0f} bpm, 乳酸阈跑速:{x_max_dist:.2f}km/h', xy=(x_max_dist, y_hr), xytext=(x_max_dist - 3, y_hr+6),
+ax2.annotate(f'Huawei手表  乳酸阈心率:171 bpm, 乳酸阈跑速:9.42km/h\n直测法测量  乳酸阈心率:{y_hr:.0f} bpm, 乳酸阈跑速:{x_max_dist:.2f}km/h', xy=(x_max_dist, y_hr), xytext=(x_max_dist - 4, y_hr+7),
              arrowprops=dict(arrowstyle='->', color='black'))
 
 
@@ -116,7 +122,7 @@ ax1.axvline(x=x_max_dist, color='black', linestyle='--',alpha=0.3)
 ax1.set_xlabel("跑速 (km/h)")
 ax1.set_ylabel("血乳酸值 (mmol/L)")
 ax2.set_ylabel("心率(bpm)")
-ax1.set_title("DmaxMod法测量乳酸阈值(指数函数拟合)", fontsize=16)
+ax1.set_title("Dmax法测量乳酸阈值(三阶多项式函数拟合)", fontsize=16)
 ax1.legend()
 plt.show()
 
