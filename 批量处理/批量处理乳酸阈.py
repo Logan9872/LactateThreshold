@@ -7,16 +7,64 @@ plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 # 读取Excel文件
 # df = pd.read_excel(r"C:\Users\Administrator\Desktop\hhh.xls", usecols=[0, 1])
 
-data = {
-    "intensity": [ 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6],
-    "lactate": [ 1.11, 1.16, 1.42, 1.83, 2.22, 2.93, 4.76, 6.68]
-
+# 01 陈明健---
+data01={
+    "intensity": [6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6, 14.8, 16, 17.2],
+    "lactate": [2.07, 2.38, 2.41, 2.61, 2.46, 3.30, 3.92, 3.90,3.91, 4.06]
 }
-
-hr_data = {
- "heart": [105, 106, 134, 150, 158, 168, 178, 184, 192],
+hr_data01 = {
+    "heart": [86, 95, 98, 106, 128, 139, 154, 161, 167, 177, 190, 189],
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6, 14.8, 16, 17.2]
+}
+# 02 陈竹鹰---
+data02={
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6],
+    "lactate": [1.97,1.18,1.73,2.00,2.44,3.27,5.00,8.16 ,12.28]
+}
+hr_data02={
+    "heart": [112
+,115
+,133
+,154
+,173
+,181
+,194
+,197
+,203
+],
     "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6]
 }
+# 03---
+data03={
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6],
+    "lactate": [ 1.11, 1.16, 1.42, 1.83, 2.22, 2.93, 4.76, 6.68]
+}
+hr_data03={
+    "heart": [105, 106, 134, 150, 158, 168, 178, 184, 192],
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6]
+}
+# 04---
+data04={
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6],
+    "lactate": [ 1.11, 1.16, 1.42, 1.83, 2.22, 2.93, 4.76, 6.68]
+}
+hr_data04={
+    "heart": [105, 106, 134, 150, 158, 168, 178, 184, 192],
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6]
+}
+# 05---
+data05={
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6],
+    "lactate": [ 1.11, 1.16, 1.42, 1.83, 2.22, 2.93, 4.76, 6.68]
+}
+hr_data05={
+    "heart": [105, 106, 134, 150, 158, 168, 178, 184, 192],
+    "intensity": [4, 5.2, 6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6]
+}
+
+# -------------------------------------------
+data = data02
+hr_data = hr_data02
 
 df = pd.DataFrame(data)
 HR_df = pd.DataFrame(hr_data )
@@ -28,16 +76,16 @@ hx = HR_df.iloc[:, 1].values
 
 # 绘制双坐标轴的一侧
 plt.figure(figsize=(10, 6))
-plt.xlim((3, 14))
-plt.ylim((1, 7))
+# plt.xlim((3, 14))
+# plt.ylim((1, 7))
 
 ax1 = plt.gca()  # Get the current axis
 # 绘制散点图
 ax1.scatter(x, y, label='血乳酸样本')
 
-x_d = [4]
-y_d = [1.64]
-ax1.scatter(x_d, y_d, c="#1f77b4")
+# x_d = [4]
+# y_d = [1.64]
+# ax1.scatter(x_d, y_d, c="#1f77b4")
 
 # 进行三阶多项式拟合
 z = np.polyfit(x, y, 3)
@@ -70,7 +118,7 @@ ax2.plot(hx_fit, h_fit, 'lightcoral', label='心率曲线')
 
 print(h_fit)
 # 找到第一个数据点和最后一个数据点的坐标 1
-first_point = (x[0], y[0])
+first_point = (x[1], y[1])
 last_point = (x[-1], y[-1])
 
 # 绘制直线连接第一个点和最后一个点
@@ -107,7 +155,9 @@ ax1.annotate(f'乳酸阈值:{y_max_dist:.2f} mmol/L', xy=(x_max_dist, y_max_dist
              arrowprops=dict(arrowstyle='->', color='black'))
 
 # 乳酸阈心率标记
-ax2.annotate(f'Huawei手表  乳酸阈心率:171 bpm, 乳酸阈跑速:9.42km/h\n直测法测量  乳酸阈心率:{y_hr:.0f} bpm, 乳酸阈跑速:{x_max_dist:.2f}km/h', xy=(x_max_dist, y_hr), xytext=(x_max_dist - 4, y_hr+7),
+# ax2.annotate(f'Huawei手表  乳酸阈心率:171 bpm, 乳酸阈跑速:9.42km/h\n直测法测量  乳酸阈心率:{y_hr:.0f} bpm, 乳酸阈跑速:{x_max_dist:.2f}km/h', xy=(x_max_dist, y_hr), xytext=(x_max_dist - 4, y_hr+7),
+#              arrowprops=dict(arrowstyle='->', color='black'))
+ax2.annotate(f'直测法测量  乳酸阈心率:{y_hr:.0f} bpm, 乳酸阈跑速:{x_max_dist:.2f}km/h', xy=(x_max_dist, y_hr), xytext=(x_max_dist - 4, y_hr+7),
              arrowprops=dict(arrowstyle='->', color='black'))
 
 
@@ -121,7 +171,7 @@ ax1.axvline(x=x_max_dist, color='black', linestyle='--',alpha=0.3)
 ax1.set_xlabel("跑速 (km/h)")
 ax1.set_ylabel("血乳酸值 (mmol/L)")
 ax2.set_ylabel("心率(bpm)")
-ax1.set_title("Dmax法测量乳酸阈值(三阶多项式函数拟合)", fontsize=16)
+ax1.set_title("01Dmax法测量乳酸阈值(三阶多项式函数拟合)", fontsize=16)
 ax1.legend()
 plt.show()
 
