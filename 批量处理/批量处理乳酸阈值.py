@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.sans-serif'] = ['SimHei'] #用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False #用来正常显示负号
 
+# 创建list存数据
+subject = []
+la_HR = []
+la_speed = []
+la_value = []
+
 # -------------------------------------数据读取和预处理----------------------------------------
 # 遍历在文件夹中的文件并读取
 dirs = os.listdir("C:\\Users\\Administrator\\Desktop\\blood_lactate\\")
@@ -38,7 +44,7 @@ for all_files in dirs:
     # -------------------------------------数据计算和绘制----------------------------------------
     # 绘制双坐标轴的一侧
     plt.figure(figsize=(10, 6))
-    # plt.xlim((3, 14))
+    # plt.xlim((3, 17))
     # plt.ylim((1, 7))
 
     ax1 = plt.gca()  # Get the current axis
@@ -50,16 +56,17 @@ for all_files in dirs:
     p = np.poly1d(z)
 
     # 心率的三阶多项式拟合
-    print(h)
     h1 = np.polyfit(hx, h, 3)
     hp = np.poly1d(h1)
 
     # 绘制拟合曲线
-    ax1.plot("", c='lightcoral',  label='心率拟合曲线')
     x_fit = np.linspace(min(x), max(x), 100)
     hx_fit = np.linspace(min(hx), max(hx), 100)
     y_fit = p(x_fit)
     hy_fit = p(hx_fit)
+    # 添加ax1中心率曲线的lable
+    ax1.plot(x_fit, y_fit, c='lightcoral',  label='心率拟合曲线')
+
     ax1.plot(x_fit, y_fit, 'r', label='血乳酸拟合曲线')
     ax1.plot(hx_fit, hy_fit, 'r', alpha=0)
 
@@ -76,10 +83,11 @@ for all_files in dirs:
             point_index = i
             print(point_distance, i)
             break
-
     first_point = (x[point_index], y[point_index])
-    print(x, y, "111")
     last_point = (x[len(x)-1], y[len(y)-1])
+
+    # first_point = (x[0], y[0])
+    # last_point = (x[len(x) - 1], y[len(y) - 1])
 
     # 绘制直线连接第一个点和最后一个点
     ax1.plot([first_point[0], last_point[0]], [first_point[1], last_point[1]], 'g--', label="样本起始点连线")
@@ -125,16 +133,22 @@ for all_files in dirs:
     ax1.set_xlabel("跑速 (km/h)")
     ax1.set_ylabel("血乳酸值 (mmol/L)")
     ax2.set_ylabel("心率(bpm)")
-    ax1.set_title("Dmax法测量乳酸阈值(三阶多项式函数拟合)", fontsize=16)
+    ax1.set_title("DmaxMod法测量乳酸阈值(三阶多项式函数拟合)", fontsize=16)
     ax1.legend()
-
-    # -------------------------------------绘制的图片存储----------------------------------------
-    # 数据存储
+    # -------------------------------------将数据存储在表格----------------------------------------
     title_png = all_files[:-4]  # 读取文件名".csv"之前的名称
+
+    subject.append(title_png)
+    la_HR.append(y_hr)
+    la_speed.append(x_max_dist)
+    la_value.append(y_max_dist)
+    sum_data_dist = {"Subject": subject, "LA_HR": la_HR, "LA_Speed": la_speed, "LA_Value": la_value}
+    sum_data = pd.DataFrame(sum_data_dist)
+    # -------------------------------------绘制的图片存储----------------------------------------
     # 将filename 修改为路径
     filename = "C:/Users/Administrator/Desktop/乳酸实验/" + title_png + ".png"
     # 保存数据
     plt.savefig(filename)
     print(filename)
     plt.show()
-
+    sum_data.to_csv("C:\\Users\\Administrator\\Desktop\\la_data.csv", index=False)

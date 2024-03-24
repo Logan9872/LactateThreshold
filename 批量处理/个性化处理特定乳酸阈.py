@@ -8,7 +8,7 @@ plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 # 01 陈明健---
 data01 = {
     "intensity": [6.4, 7.6, 8.8, 10, 11.2, 12.4, 13.6, 14.8, 16, 17.2],
-    "lactate": [2.07, 2.38, 2.41, 2.61, 2.46, 3.30, 3.92, 3.90,3.91, 4.06]
+    "lactate": [2.07, 2.38, 2.41, 2.61, 2.46, 3.30, 3.92, 3.90, 3.91, 4.06]
 }
 hr_data01 = {
     "heart": [86, 95, 98, 106, 128, 139, 154, 161, 167, 177, 190, 189],
@@ -62,8 +62,8 @@ hr_data06={
 }
 
 # -------------------------------------------
-data = data06
-hr_data = hr_data06
+data = data01
+hr_data = hr_data01
 
 df = pd.DataFrame(data)
 HR_df = pd.DataFrame(hr_data)
@@ -115,16 +115,19 @@ ax2.plot(hx_fit, h_fit, 'lightcoral', label='心率曲线')
 
 
 # 找到第一个数据点和最后一个数据点的坐标 1
-# DmaxMod找到两点间插值大于0.4的点连线
-for i in range(len(y)-1):
-    point_distance = y[i+1] - y[i]
-    if (point_distance >= 0.4):
-        point_index = i
-        print(point_distance, i)
-        break
+# # DmaxMod找到两点间插值大于0.4的点连线
+# for i in range(len(y)-1):
+#     point_distance = y[i+1] - y[i]
+#     if (point_distance >= 0.4):
+#         point_index = i
+#         print(point_distance, i)
+#         break
+#
+# first_point = (x[point_index], y[point_index])
+# last_point = (x[-1], y[-1])
 
-first_point = (x[point_index], y[point_index])
-last_point = (x[-1], y[-1])
+first_point = (x[0], y[0])
+last_point = (x[len(x) - 1], y[len(y) - 1])
 
 # 绘制直线连接第一个点和最后一个点
 ax1.plot([first_point[0], last_point[0]], [first_point[1], last_point[1]], 'g--', label="样本起始点连线")
@@ -156,6 +159,7 @@ y_max_dist = y_fit[index_max_dist]
 # 绘制HRn
 y_hr = hp(x_max_dist)
 print(y_hr)
+print(y_max_dist)
 
 # 在拟合曲线上标记Dmax值
 ax1.annotate(f'乳酸阈值:{y_max_dist:.2f} mmol/L', xy=(x_max_dist, y_max_dist), xytext=(x_max_dist - 2, y_max_dist + 1),
